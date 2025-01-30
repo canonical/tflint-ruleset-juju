@@ -28,7 +28,6 @@ jobs:
       run: make build
   required_status_checks:
     name: Required Integration Test Status Checks
-    runs-on: ${{ inputs.builder-runner-label }}
     needs:
       - test
     if: always() && !cancelled()
