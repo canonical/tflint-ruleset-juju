@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: "0 0 * * *"
 
 jobs:
   test:
@@ -28,3 +26,13 @@ jobs:
       run: make test
     - name: Run build
       run: make build
+  required_status_checks:
+    name: Required Integration Test Status Checks
+    runs-on: ${{ inputs.builder-runner-label }}
+    needs:
+      - test
+    if: always() && !cancelled()
+    timeout-minutes: 5
+    steps:
+      - run: |
+          [ '${{ needs.test.result }}' = 'success' ] || (echo test failed && false)
