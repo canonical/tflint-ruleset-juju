@@ -41,7 +41,6 @@ func (r *JujuApplicationInvalidNameRule) Link() string {
 
 // Check checks whether application name is valid.
 func (r *JujuApplicationInvalidNameRule) Check(runner tflint.Runner) error {
-	// This rule is an example to get a top-level resource attribute.
 	resources, err := runner.GetResourceContent("juju_application", &hclext.BodySchema{
 		Attributes: []hclext.AttributeSchema{
 			{Name: "name"},
@@ -51,7 +50,6 @@ func (r *JujuApplicationInvalidNameRule) Check(runner tflint.Runner) error {
 		return err
 	}
 
-	// Put a log that can be output with `TFLINT_LOG=debug`
 	logger.Debug(fmt.Sprintf("Get %d applications", len(resources.Blocks)))
 
 	for _, resource := range resources.Blocks {
