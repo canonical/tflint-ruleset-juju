@@ -7,7 +7,7 @@ import (
 	"github.com/terraform-linters/tflint-plugin-sdk/helper"
 )
 
-func Test_TerraformBackendType(t *testing.T) {
+func Test_JujuModelInvalidName(t *testing.T) {
 	tests := []struct {
 		Name     string
 		Content  string
@@ -16,28 +16,24 @@ func Test_TerraformBackendType(t *testing.T) {
 		{
 			Name: "issue found",
 			Content: `
-terraform {
-  backend "s3" {
-    bucket = "mybucket"
-    key    = "path/to/my/key"
-    region = "us-east-1"
-  }
+resource "juju_model" "web" {
+    name = "testing_123"
 }`,
 			Expected: helper.Issues{
 				{
-					Rule:    NewTerraformBackendTypeRule(),
-					Message: "backend type is s3",
+					Rule:    NewJujuModelInvalidNameRule(),
+					Message: "testing_123 is not a valid model name",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 3},
-						End:      hcl.Pos{Line: 3, Column: 15},
+						Start:    hcl.Pos{Line: 3, Column: 12},
+						End:      hcl.Pos{Line: 3, Column: 25},
 					},
 				},
 			},
 		},
 	}
 
-	rule := NewTerraformBackendTypeRule()
+	rule := NewJujuModelInvalidNameRule()
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
